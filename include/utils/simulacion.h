@@ -14,6 +14,11 @@ typedef struct {
 } promedios;
 
 
+/* Funciones para resetear los espines del modelo */
+void sim_reset_up(modelo *m);
+void sim_reset_down(modelo *m);
+void sim_reset_ran(modelo *m);
+
 /* Funciones para llenar un buffer con valores de magnetización y energía */
 void sim_get_M(modelo *m, int N, int *buffer);
 void sim_get_E(modelo *m, int N, int *buffer);

@@ -18,6 +18,9 @@ void modelo_reset_up(modelo *m);
 void modelo_reset_down(modelo *m);
 void modelo_reset_ran(modelo *m);
 
+/* Funcion para resetear la temperatura */
+void modelo_reset_T(modelo *m, double T);
+
 /* Funciones para inicializar el modelo */
 void modelo_init_up(modelo *m, double T, int n, short *mat);
 void modelo_init_down(modelo *m, double T, int n, short *mat);

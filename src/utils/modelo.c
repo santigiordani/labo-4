@@ -130,6 +130,16 @@ void modelo_init_ran(modelo *m, double T, int n, short *mat) {
 
 }
 
+/* Reseteamos la temperatura */
+void modelo_reset_T(modelo *m, double T) {
+    /*
+        Reseteamos la temperatura del modelo.
+    */
+
+    m->T = T;
+
+}
+
 /* Avanzar el modelo un paso Monte Carlo */
 void modelo_paso_mc(modelo *m) {
     /*

@@ -2,6 +2,39 @@
 #include <simulacion.h>
 
 
+/* Reseteamos los espines del modelo en up */
+void sim_reset_up(modelo *m) {
+    /*
+        Reseteamos los espines del modelo m, pero no el estado del generador
+        de números aleatorios.
+    */
+
+    modelo_reset_up(m);
+
+}
+
+/* Reseteamos los espines del modelo en down */
+void sim_reset_down(modelo *m) {
+    /*
+        Reseteamos los espines del modelo m, pero no el estado del generador
+        de números aleatorios.
+    */
+
+    modelo_reset_down(m);
+
+}
+
+/* Reseteamos los espines del modelo aleatoriamente */
+void sim_reset_ran(modelo *m) {
+    /*
+        Reseteamos los espines del modelo m, pero no el estado del generador
+        de números aleatorios.
+    */
+
+    modelo_reset_ran(m);
+
+}
+
 /* Llenamos un buffer de tamaño N con valores de magnetización */
 void sim_get_M(modelo *m, int N, int *buffer) {
     /*
