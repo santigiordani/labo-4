@@ -29,117 +29,146 @@
 */
 
 
+/* Reseteamos la matriz con todos los espines up */
+void modelo_reset_up(modelo *m) {
+    /*
+        Reseteamos la matriz del modelo m con todos los espines up
+    */
+
+    for (int i = 0; i < m->n; ++i) {
+        for (int j = 0; j < m->n; ++j) {
+            *(m->mat + m->n * i + j) = (short) 1;
+        }
+    }
+
+}
+
 /* Inicializamos el modelo m con todos los espines up */
-void modelo_init_up(modelo m, double T, int n, short *mat) {
+void modelo_init_up(modelo *m, double T, int n, short *mat) {
     /*
         Inicilaizamos el modelo m con todos los espines up
     */
 
     // Inicializamos la semilla
-    mtran_set(m.mt_state_ptr, 5489UL);
+    mtran_set(m->mt_state_ptr, 5489UL);
     
     // Guardamos los atributos
-    m.T = T;
-    m.n = n;
-    m.mat = mat;
+    m->T = T;
+    m->n = n;
+    m->mat = mat;
 
-    // Llenamos la matriz de espines up
-    for (int i = 0; i < n; ++i) {
-        for (int j = 0; j < n; ++j) {
-            *(m.mat + n * i + j) = (short) 1;
+    // Setteamos todos los espines up
+    modelo_reset_up(m);
+
+}
+
+/* Reseteamos la matriz con todos los espines down */
+void modelo_reset_down(modelo *m) {
+    /*
+        Reseteamos la matriz del modelo m con todos los espines down
+    */
+
+    for (int i = 0; i < m->n; ++i) {
+        for (int j = 0; j < m->n; ++j) {
+            *(m->mat + m->n * i + j) = (short) -1;
         }
     }
 
 }
 
 /* Inicializamos el modelo m con todos los espines down */
-void modelo_init_down(modelo m, double T, int n, short *mat) {
+void modelo_init_down(modelo *m, double T, int n, short *mat) {
     /*
-        Inicilaizamos el modelo m con todos los espines down
+        Inicilaizamos el modelo m con todos los espines down.
     */
 
     // Inicializamos la semilla
-    mtran_set(m.mt_state_ptr, 5489UL);
+    mtran_set(m->mt_state_ptr, 5489UL);
     
     // Guardamos los atributos
-    m.T = T;
-    m.n = n;
-    m.mat = mat;
+    m->T = T;
+    m->n = n;
+    m->mat = mat;
 
-    // Llenamos la matriz de espines up
-    for (int i = 0; i < n; ++i) {
-        for (int j = 0; j < n; ++j) {
-            *(m.mat + n * i + j) = (short) -1;
+    // Setteamos todos los espines down
+    modelo_reset_down(m);
+
+}
+
+/* Reseteamos la matriz con todos los espines aleatorios */
+void modelo_reset_ran(modelo *m) {
+    /*
+        Reseteamos la matriz del modelo m con todos los espines aleatorios
+        uniformemente distribuídos.
+    */
+
+    for (int i = 0; i < m->n; ++i) {
+        for (int j = 0; j < m->n; ++j) {
+            *(m->mat + m->n * i + j) = (short) ((mtran(m->mt_state_ptr) > .5) ? 1 : -1);
         }
     }
 
 }
 
 /* Inicializamos el modelo m con todos los espines aleatorios */
-void modelo_init_ran(modelo m, double T, int n, short *mat) {
+void modelo_init_ran(modelo *m, double T, int n, short *mat) {
     /*
         Inicilaizamos el modelo m con todos los espines aleatorios
+        uniformemente distribuídos.
     */
 
     // Inicializamos la semilla
-    mtran_set(m.mt_state_ptr, 5489UL);
+    mtran_set(m->mt_state_ptr, 5489UL);
     
     // Guardamos los atributos
-    m.T = T;
-    m.n = n;
-    m.mat = mat;
+    m->T = T;
+    m->n = n;
+    m->mat = mat;
 
-    // Llenamos la matriz de espines up
-    for (int i = 0; i < n; ++i) {
-        for (int j = 0; j < n; ++j) {
-            *(m.mat + n * i + j) = (short) ((mtran(m.mt_state_ptr) > .5) ? 1 : -1);
-        }
-    }
+    // Setteamos todos los espines aleatorios
+    modelo_reset_ran(m);
 
 }
 
 /* Avanzar el modelo un paso Monte Carlo */
-void modelo_paso_mc(modelo m) {
+void modelo_paso_mc(modelo *m) {
     /*
         Avanzamos un paso Monte Carlo el modelo m de acuerdo con el método
         Metrópolis.
     */
 
     // Un paso MC consta de m.n * m.n intentos de flip
-    for (int n2 = m.n * m.n, k = 0; k < n2; ++k) {
+    for (int n2 = m->n * m->n, k = 0; k < n2; ++k) {
     
         // Seleccionamos un par de índices
-        int i = (int) (m.n * mtran(m.mt_state_ptr));
-        int j = (int) (m.n * mtran(m.mt_state_ptr));
+        int i = (int) (m->n * mtran(m->mt_state_ptr));
+        int j = (int) (m->n * mtran(m->mt_state_ptr));
     
         // Calculamos la diferencia de energía
-        double dE = (double) 2 * *(m.mat + m.n * i + j) * (
-            *(m.mat + m.n * i + ((j + 1) % m.n)) +
-            *(m.mat + m.n * i + ((j - 1) % m.n)) +
-            *(m.mat + m.n * ((i + 1) % m.n) + j) +
-            *(m.mat + m.n * ((i - 1) % m.n) + j)
+        double dE = (double) 2 * *(m->mat + m->n * i + j) * (
+            *(m->mat + m->n * i + ((j + 1) % m->n)) +
+            *(m->mat + m->n * i + ((j - 1) % m->n)) +
+            *(m->mat + m->n * ((i + 1) % m->n) + j) +
+            *(m->mat + m->n * ((i - 1) % m->n) + j)
         );
 
-        // Calculamos la probabilidad de aceptar el flip
-        double p = (m.T == 0) ? 1 : exp(- dE / m.T);
-
         // Hacemos o no el flip
-        if (mtran(m.mt_state_ptr) < p) *(m.mat + m.n * i + j) *= -1;
+        if (- m->T * log(mtran(m->mt_state_ptr)) > dE) *(m->mat + m->n * i + j) *= -1;
 
     }
 
 }
 
 /* Calculamos la magnetización */
-double modelo_get_M(modelo m) {
+double modelo_get_M(modelo *m) {
     /*
         Calculamos la magnetización del modelo en el estado actual.
     */
 
     int sum = 0;
-    for (int i = 0; i < m.n; ++i) {
-        for (int j = 0; j < m.n; ++j) {
-            sum += (int) *(m.mat + m.n * i + j);
+    for (int i = 0; i < m->n; ++i) {
+        for (int j = 0; j < m->n; ++j) {
+            sum += (int) *(m->mat + m->n * i + j);
         }
     }
 
@@ -148,19 +177,19 @@ double modelo_get_M(modelo m) {
 }
 
 /* Calculamos la energía */
-double modelo_get_E(modelo m) {
+double modelo_get_E(modelo *m) {
     /*
         Calculamos la energía del modelo en el estado actual.
     */
 
     int sum = 0;
-    for (int i = 0; i < m.n; ++i) {
-        for (int j = 0; j < m.n; ++j) {
+    for (int i = 0; i < m->n; ++i) {
+        for (int j = 0; j < m->n; ++j) {
 
             // Sumamos solo los vecinos de arriba y de la derecha
-            sum += (int) *(m.mat + m.n * i + j) * (
-                *(m.mat + m.n * ((i + 1) % m.n) + j) + 
-                *(m.mat + m.n * i + ((j + 1) % m.n))
+            sum += (int) *(m->mat + m->n * i + j) * (
+                *(m->mat + m->n * ((i + 1) % m->n) + j) + 
+                *(m->mat + m->n * i + ((j + 1) % m->n))
             );
 
         }
