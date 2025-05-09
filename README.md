@@ -58,8 +58,10 @@ más general posible) que son útiles para todo el ejercicio. Entre estos hay
     - Magnetización media: $\langle M \rangle$ (es posible que de 0 por
     magnetización espontanea)
     - Magnetización absoluta media: $\langle |M| \rangle$
-    - Magnetización cuadrática media: $\langle M^2 \rangle$ (para calcular la susceptibilidad)
-    - Magnetización cuartica media: $\langle M^4 \rangle$ (para calcular los cumulantes de Binder)
+    - Magnetización cuadrática media: $\langle M^2 \rangle$ (para calcular la
+    susceptibilidad)
+    - Magnetización cuartica media: $\langle M^4 \rangle$ (para calcular los
+    cumulantes de Binder)
     - Energía media: $\langle E \rangle$
     - Energía cuadrática media: $\langle E^2 \rangle$
     - Susceptibilidad: $\chi = \dfrac{1}{T^*} \left(\langle M^2 \rangle - \langle |M| \rangle^2\right)$
@@ -73,6 +75,10 @@ más general posible) que son útiles para todo el ejercicio. Entre estos hay
   hasta $T_f = b$. El barrido no es uniforme sinó que los puntos se muestrean
   conforme una distribución (a ser precisada más abajo) que garantiza una mayor
   densidad de puntos cerca de $T_c$.
+
+Como además hay aleatoriedad dando vuelta, el `Modelo` va a necesitar almacenar
+también un puntero al estado de algún generador de números aleatorios. En este
+caso vamos a usar el Mersenne Twister.
 
 # Notas personales
 

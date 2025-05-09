@@ -1,0 +1,95 @@
+\documentclass[a4paper,12pt]{article}
+
+% Paquetes
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{amsmath, amssymb}
+\usepackage[margin = 1in]{geometry}
+\usepackage[spanish, es-tabla]{babel}
+\spanishdecimal{.}
+\usepackage{color}
+\usepackage{hyperref}
+
+\usepackage{inconsolata}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\lstset{
+    language=C,
+    basicstyle=\ttfamily\scriptsize,
+    numbers=left,
+    numberstyle=\tiny,
+    numbersep=5pt,
+    %backgroudcolor={gray!10},
+    keywordstyle=\color{blue},
+    commentstyle=\color{gray},
+    stringstyle=\color{red},
+    showstringspaces=false,
+    frame=single,
+    breaklines=true,
+    tabsize=2,
+    captionpos=t,
+    extendedchars=true,
+    literate={á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1 {Ú}{{\'U}}1 {ñ}{{\~{n}}}1 {°}{{$^{\circ}$}}1
+}
+
+% Comandos
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\var}{\operatorname{Var}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\norm}[1]{\left\Vert#1\right\Vert}
+
+\renewcommand{\O}{\mathcal{O}}
+\renewcommand{\P}{\mathbb{P}}
+
+% Título
+\title{Física computacional - Modelo de Ising \\ Laboratorio 4}
+\author{El mono}
+\date{}
+
+% Documento
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+    Replicamos el modelo de Ising e integramos un par de cosas usando integración monte carlo, para lo que usamos el método metropolis o algo así. Tengo que estudiar los detalles... Consulté a Inés Armendariz sobre el tema, por ahí ella me puede tirar algo de biblio formal sobre el tema.
+\end{abstract}
+
+\section{Introducción}
+
+\section{Preliminares}
+\label{sec:preliminares}
+
+\section{Resultados}
+
+\subsection{Caminatas aleatorias}
+
+\subsection{Integración Monte Carlo}
+
+\section{Discusión}
+
+\subsection{Caminatas aleatorias}
+\label{sec:discusion:rw}
+
+\subsection{Integración Monte Carlo}
+\label{sec:discusion:mc}
+
+\section{Trabajo futuro}
+
+ESTA ES LA ÚLTIMA SECCIÓN DE TRABAJO FUTURO, LA DEJO PARA TENER UNA REFERENCIA PARA ACTUALIZAR MAS TARDE.
+
+Finalmente! Las imágenes tienen letra grande. Este es el más notorio de nuestros avances, pero hubo otros: adoptamos una estructura de carpetas {\it estandar} (en cierto sentido) para el código correspondiente a los ejercicios, automatizamos la compilación, testeo y generación de imágenes por medio de archivos \verb|makefile|, agregamos control de versiones por medio de Git y almacenamos el código en un repositorio online con GitHub. También estudiamos lo básico de CUDA, un lenguaje similar a C++ desarrollado por NVidia que permite programar para los procesadores de las GPUs, pero como los ejercicio de este laboratorio no eran demasiado costosos computacionalmente, no fue necesario implementar los generadores en este lenguaje. Esperamos, sin embargo, que cobre relevancia en laboratorios futuros.\\
+
+Este ha sido, hasta el momento, el laboratorio más divertido. Entre las cosas que quedan por explorar, las más importantes son: el manual del compilador (opciones de optimización, tratar advertencias como errores, usar varios compiladores para detectar diferentes errores, etc), el lenguaje de scripting Bash, y temas básicos de mecánica estadística, para poder hacer los siguientes laboratorios.
+
+%\section{Código}
+%\label{sec:codice}
+%\lstinputlisting[caption={Módulo con funciones auxiliares.}, label={lst:calor.c}]{../ej1/calor.c}
+
+\bibliographystyle{abbrv}
+\bibliography{biblio}
+
+\end{document}
