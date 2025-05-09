@@ -105,23 +105,28 @@ void modelo_paso_mc(modelo m) {
         Metrópolis.
     */
 
-    // Seleccionamos un par de índices
-    int i = (int) (m.n * mtran(m.mt_state_ptr));
-    int j = (int) (m.n * mtran(m.mt_state_ptr));
+    // Un paso MC consta de m.n * m.n intentos de flip
+    for (int n2 = m.n * m.n, k = 0; k < n2; ++k) {
     
-    // Calculamos la diferencia de energía
-    double dE = (double) 2 * *(m.mat + m.n * i + j) * (
-        *(m.mat + m.n * i + ((j + 1) % m.n)) +
-        *(m.mat + m.n * i + ((j - 1) % m.n)) +
-        *(m.mat + m.n * ((i + 1) % m.n) + j) +
-        *(m.mat + m.n * ((i - 1) % m.n) + j)
-    );
+        // Seleccionamos un par de índices
+        int i = (int) (m.n * mtran(m.mt_state_ptr));
+        int j = (int) (m.n * mtran(m.mt_state_ptr));
+    
+        // Calculamos la diferencia de energía
+        double dE = (double) 2 * *(m.mat + m.n * i + j) * (
+            *(m.mat + m.n * i + ((j + 1) % m.n)) +
+            *(m.mat + m.n * i + ((j - 1) % m.n)) +
+            *(m.mat + m.n * ((i + 1) % m.n) + j) +
+            *(m.mat + m.n * ((i - 1) % m.n) + j)
+        );
 
-    // Calculamos la probabilidad de aceptar el flip
-    double p = (m.T == 0) ? 1 : exp(- dE / m.T);
+        // Calculamos la probabilidad de aceptar el flip
+        double p = (m.T == 0) ? 1 : exp(- dE / m.T);
 
-    // Hacemos o no el flip
-    if (mtran(m.mt_state_ptr) < p) *(m.mat + m.n * i + j) *= -1;
+        // Hacemos o no el flip
+        if (mtran(m.mt_state_ptr) < p) *(m.mat + m.n * i + j) *= -1;
+
+    }
 
 }
 
