@@ -12,19 +12,25 @@ typedef struct {
     mtran_state *mt_state_ptr;      // Estado del generador de números aleatorios
 } modelo;
 
+/* Inicialización de la matriz del modelo */
+typedef enum {
+    COLD,                           // Inicializar con todos los espines up
+    HOT                             // Inicializar con todos los espines aleatorios
+} start;
+
 
 /* Funciones para resetear los espines */
 void modelo_reset_up(modelo *m);
-void modelo_reset_down(modelo *m);
 void modelo_reset_ran(modelo *m);
 
 /* Funcion para resetear la temperatura */
 void modelo_reset_T(modelo *m, double T);
 
 /* Funciones para inicializar el modelo */
-void modelo_init_up(modelo *m, double T, int n, short *mat);
-void modelo_init_down(modelo *m, double T, int n, short *mat);
-void modelo_init_ran(modelo *m, double T, int n, short *mat);
+void modelo_init(modelo *m, start s);
+
+/* Función para mostrar el estado en pantalla */
+void modelo_print(modelo *m);
  
 /* Avanzar el modelo un paso Monte Carlo */
 void modelo_paso_mc(modelo *m);

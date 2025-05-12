@@ -1,18 +1,20 @@
 #include <math.h>
+#include <stdio.h>
 #include <modelo.h>
 
 
 /*
 
-    Es importante destacar que el usuario es responsable de reservar en memoria
-    el espacio para un struct modelo, para la matriz de short de este modelo,
-    y para el struct mtran_state. Esto es principalmente por dos razones:
-        - Porque permite que la matriz se almacene en el stack, que es mas
-          rápido, y tiene mas chances de entrar en el cache.
-        - Porque ceder esta responsabilidad al usuario evita las fugas de
-          memoria.
-
-    Entonces, un uso típico del modelo sería:
+    El usuario es responsable de reservar espacio en memoria para:
+        - El estado del generador de números aleatorios
+        - La matriz para el modelo
+        - El struct modelo
+    
+    Esto es principalmente por 2 razones:
+        - Para evitar memory leaks
+        - Para que todo quede en el stack, y posiblemente en el cache
+    
+    Un uso típico del modelo sería:
     
     // Definir los parámetros
     double T = 0;
@@ -21,10 +23,12 @@
     // Reservar espacio
     mtran_state mt_state;
     short mat[n * n];
-    modelo m;
+
+    // Crear el modelo
+    modelo m = {T, n, mat, &mt_state};
 
     // Inicializar el modelo
-    modelo_init_up(m, T, n, mat);
+    modelo_init(&m, COLD);
 
 */
 
@@ -43,58 +47,6 @@ void modelo_reset_up(modelo *m) {
 
 }
 
-/* Inicializamos el modelo m con todos los espines up */
-void modelo_init_up(modelo *m, double T, int n, short *mat) {
-    /*
-        Inicilaizamos el modelo m con todos los espines up
-    */
-
-    // Inicializamos la semilla
-    mtran_set(m->mt_state_ptr, 5489UL);
-    
-    // Guardamos los atributos
-    m->T = T;
-    m->n = n;
-    m->mat = mat;
-
-    // Setteamos todos los espines up
-    modelo_reset_up(m);
-
-}
-
-/* Reseteamos la matriz con todos los espines down */
-void modelo_reset_down(modelo *m) {
-    /*
-        Reseteamos la matriz del modelo m con todos los espines down
-    */
-
-    for (int i = 0; i < m->n; ++i) {
-        for (int j = 0; j < m->n; ++j) {
-            *(m->mat + m->n * i + j) = (short) -1;
-        }
-    }
-
-}
-
-/* Inicializamos el modelo m con todos los espines down */
-void modelo_init_down(modelo *m, double T, int n, short *mat) {
-    /*
-        Inicilaizamos el modelo m con todos los espines down.
-    */
-
-    // Inicializamos la semilla
-    mtran_set(m->mt_state_ptr, 5489UL);
-    
-    // Guardamos los atributos
-    m->T = T;
-    m->n = n;
-    m->mat = mat;
-
-    // Setteamos todos los espines down
-    modelo_reset_down(m);
-
-}
-
 /* Reseteamos la matriz con todos los espines aleatorios */
 void modelo_reset_ran(modelo *m) {
     /*
@@ -110,8 +62,8 @@ void modelo_reset_ran(modelo *m) {
 
 }
 
-/* Inicializamos el modelo m con todos los espines aleatorios */
-void modelo_init_ran(modelo *m, double T, int n, short *mat) {
+/* Inicializamos el modelo m */
+void modelo_init(modelo *m, start s) {
     /*
         Inicilaizamos el modelo m con todos los espines aleatorios
         uniformemente distribuídos.
@@ -120,13 +72,8 @@ void modelo_init_ran(modelo *m, double T, int n, short *mat) {
     // Inicializamos la semilla
     mtran_set(m->mt_state_ptr, 5489UL);
     
-    // Guardamos los atributos
-    m->T = T;
-    m->n = n;
-    m->mat = mat;
-
     // Setteamos todos los espines aleatorios
-    modelo_reset_ran(m);
+    (s == COLD) ? modelo_reset_up(m) : modelo_reset_ran(m);
 
 }
 
@@ -137,6 +84,25 @@ void modelo_reset_T(modelo *m, double T) {
     */
 
     m->T = T;
+
+}
+
+/* Mostramos en pantalla el estado */
+void modelo_print(modelo *m) {
+    /*
+        Mostramos en pantalla los parámetros del modelo y el estado de la
+        matriz de espines.
+    */
+
+    printf("Temperatura: %f\n", m->T);
+    printf("Tamaño:      %d\n", m->n);
+    printf("Espines:\n");
+    for (int i = 0; i < m->n; ++i) {
+        for (int j = 0; j < m->n; ++j) {
+            printf("%s ", (*(m->mat + i * m->n + j) == 1) ? "##" : "  ");
+        }
+        printf("\n");
+    }
 
 }
 
@@ -157,9 +123,9 @@ void modelo_paso_mc(modelo *m) {
         // Calculamos la diferencia de energía
         double dE = (double) 2 * *(m->mat + m->n * i + j) * (
             *(m->mat + m->n * i + ((j + 1) % m->n)) +
-            *(m->mat + m->n * i + ((j - 1) % m->n)) +
+            *(m->mat + m->n * i + ((j + m->n - 1) % m->n)) +
             *(m->mat + m->n * ((i + 1) % m->n) + j) +
-            *(m->mat + m->n * ((i - 1) % m->n) + j)
+            *(m->mat + m->n * ((i + m->n - 1) % m->n) + j)
         );
 
         // Hacemos o no el flip
@@ -196,7 +162,7 @@ double modelo_get_E(modelo *m) {
     for (int i = 0; i < m->n; ++i) {
         for (int j = 0; j < m->n; ++j) {
 
-            // Sumamos solo los vecinos de arriba y de la derecha
+            // Sumamos solo los vecinos de abajo y de la derecha
             sum += (int) *(m->mat + m->n * i + j) * (
                 *(m->mat + m->n * ((i + 1) % m->n) + j) + 
                 *(m->mat + m->n * i + ((j + 1) % m->n))
@@ -205,6 +171,6 @@ double modelo_get_E(modelo *m) {
         }
     } 
 
-    return (double) sum;
+    return - (double) sum;
 
 }

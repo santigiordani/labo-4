@@ -1,28 +1,24 @@
-# Paths
-objpath      = ../../bin/obj/generadores
-includepath  = ../../include/generadores
+# src/utils/makefile
 
-# Librerías
-objfiles     = ran0.o ran1.o ran2.o mzran13.o mtran.o
-objfullpaths = $(addprefix $(objpath)/, $(objfiles))
+# Variables
+SRC_DIR := $(CURDIR)
+OBJ_DIR := $(SRC_DIR)/../../bin/obj/utils
+SRC_FILES := $(wildcard *.c)
+OBJ_FILES := $(patsubst %.c,$(OBJ_DIR)/%.o,$(SRC_FILES))
+CC := gcc
+CFLAGS := -I$(SRC_DIR)/../../include/utils
 
-# Compilamos todas las librerías
-all : $(objfullpaths)
+.PHONY: all clean
 
-# Compilamos cada librería individual
-$(objfullpaths) : $(objpath)/%.o : %.c
-	@echo "Compilando $@"
-	@gcc -c $*.c -o $@ -I$(includepath)
+all: $(OBJ_FILES)
 
-# Test
-test : $(objfullpaths)
-	@gcc -c test.c -o test.o -I$(includepath)
-	@gcc test.o $(objfullpaths) -o test 
-	@./test
-	@rm -f test test.o
+$(OBJ_DIR)/%.o: %.c | $(OBJ_DIR)
+	@echo "Compilando $<"
+	@$(CC) $(CFLAGS) -c $< -o $@
 
-# Limpieza
-clean :
-	@rm -f $(objfullpaths)
+$(OBJ_DIR):
+	@mkdir -p $(OBJ_DIR)
 
-.PHONY : clean all test
+clean:
+	@rm -f $(OBJ_DIR)/*.o
+	@echo Todo limpio crack

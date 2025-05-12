@@ -4,16 +4,26 @@
 
 
 /* Función auxiliar para barrer temperaturas */
-double bar_get_T(double x) {
+double bar_get_T(double x, double p, double eps) {
     /*
         Esta función es monótona creeciente de [0, 1] en [0, 3.3] y crece más
         lentamente cerca de T_c (aproximadamente 2.2676), de forma que convierte
         un muestreo uniforme del [0, 1] en un muestreo por importancia del
         intervalo [0, 3.3].
+
+        Concretamente, el p% de los puntos estan contenidos en el intervalo
+        [T_c - eps, T_c + eps].
     */
 
-    // TODO Reemplazar por una función diferente
-    return b * x;
+    // Variables auxiliares
+    double A = (b + 2 * eps) / (1 - p);
+    double B = p / (2 * eps);
+    double xa = (Tc - eps) * A;
+    double xb = xa + p;
+
+    if (x < xa) return A * x;
+    if (x < xb) return B * (x - xa) + (Tc - eps);
+                return A * (x - xb) + (Tc + eps);
 
 }
 
@@ -27,10 +37,10 @@ void bar_get_promedios(modelo *m, int N, int n, promedios *buffer) {
     */
 
     double T;
-    for (int i = 0; i < N; ++i) {
+    for (int i = 0; i < n; ++i) {
 
         // Calculamos la temperatura correspondiente en el barrido
-        T = bar_get_T((double) i / N);
+        T = bar_get_T((double) i / n, 0.3, 0.01);
 
         // Setteamos esta temperatura en el modelo
         modelo_reset_T(m, T);

@@ -13,17 +13,6 @@ void sim_reset_up(modelo *m) {
 
 }
 
-/* Reseteamos los espines del modelo en down */
-void sim_reset_down(modelo *m) {
-    /*
-        Reseteamos los espines del modelo m, pero no el estado del generador
-        de números aleatorios.
-    */
-
-    modelo_reset_down(m);
-
-}
-
 /* Reseteamos los espines del modelo aleatoriamente */
 void sim_reset_ran(modelo *m) {
     /*
@@ -36,7 +25,7 @@ void sim_reset_ran(modelo *m) {
 }
 
 /* Llenamos un buffer de tamaño N con valores de magnetización */
-void sim_get_M(modelo *m, int N, int *buffer) {
+void sim_get_M(modelo *m, int N, double *buffer) {
     /*
         Hacemos N pasos MC a partir del estado actual del modelo y en cada uno
         calculamos y guardamos la magnetización en el buffer.
@@ -47,6 +36,9 @@ void sim_get_M(modelo *m, int N, int *buffer) {
         // Damos un paso
         modelo_paso_mc(m);
 
+        // Mostramos como va la matriz
+        // modelo_print(m);
+
         // Guardamos la magnetización
         buffer[i] = modelo_get_M(m);
 
@@ -55,7 +47,7 @@ void sim_get_M(modelo *m, int N, int *buffer) {
 }
 
 /* Llenamos un buffer de tamaño N con valores de energía */
-void sim_get_E(modelo *m, int N, int *buffer) {
+void sim_get_E(modelo *m, int N, double *buffer) {
     /*
         Hacemos N pasos MC a partir del estado actual del modelo y en cada uno
         calculamos y guardamos la energía en el buffer.
@@ -123,6 +115,7 @@ promedios sim_get_promedios(modelo *m, int N) {
 
     // Definimos el struct
     promedios prom = {
+        m->T,
         M_abs,
         E,
         chi,
