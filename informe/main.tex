@@ -209,6 +209,8 @@ Las gráficas correspondientes a $T^* = 2.2676$, en cambio, exhiben un comportam
 
 Esta observación nos conduce a una sugerencia para evitar el problema: cambiar la distribución de $g$. En nuestro caso, la probabilidad $g(\; \cdot \mid x)$ es uniforme sobre el conjunto $X = \{x' \in S : d_H(x', x) = 1 \}$. Esto hace extremadamente improbable que la cadena de Markov pueda saltar de la región cercana a una moda hasta la región cercan a la otra moda cuando la temperatura es baja. Un algoritmo diferente, como por ejemplo, proponer varios flips simultaneos y {\it luego} calcular $\Delta E$, representaría una distribución $g$ mas amplia, por lo que podría ayudar a muestrear mejor la distribucioń de Boltzmann en temperaturas cercanas a $T_c$. Por supuesto, esto no soluciona el problema, simplemente lo desplaza. Ahora el fenómeno que dificulta el sampleo, en lugar de presentarse en $T_c$, se presentaría en alguna otra temperatura menor a $T_c$.
 
+Para para para para, entonces justo el algoritmo de sampleo qu enos dieron falla JUSTOen la temperatura que queremos estudiar? Si
+
 Ahora, si esto es correcto, significa que una distribución para la propuesta de salto diferente podría resolver estos problemas, o tendría problemas en otras regiones. No? Deberíamos proopner otra distribución para la propuesta de salto y testearla. Aunque en en realidad primero debería discutirlo con Guidex para asegurarme de que entendí bien las cosas.
 
 La Figura \ref{fig:a} tiene todavía una característica más, digna de observación. en t bajas, ocurre que tenemos bimodalidad
