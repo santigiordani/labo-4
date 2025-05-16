@@ -52,4 +52,9 @@ run:
 plot:
 	@gnuplot scripts/a.gnuplot
 	@gnuplot scripts/b.gnuplot
+	@gnuplot scripts/b_bis.gnuplot
 	@gnuplot scripts/c.gnuplot
+	@gnuplot scripts/d.gnuplot
+	@gnuplot scripts/d_bis.gnuplot
+	@gnuplot scripts/e.gnuplot
+	@cd informe && pdflatex main.tex

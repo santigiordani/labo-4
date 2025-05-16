@@ -16,9 +16,9 @@ double bar_get_T(double x, double p, double eps) {
     */
 
     // Variables auxiliares
-    double A = (b + 2 * eps) / (1 - p);
-    double B = p / (2 * eps);
-    double xa = (Tc - eps) * A;
+    double A = (b - 2 * eps) / (1 - p);
+    double B = (2 * eps) / p;
+    double xa = (Tc - eps) / A;
     double xb = xa + p;
 
     if (x < xa) return A * x;
@@ -29,7 +29,7 @@ double bar_get_T(double x, double p, double eps) {
 
 
 /* Barremos tempreaturas en [a, b] y llenamos un buffer de promedios */
-void bar_get_promedios(modelo *m, int N, int n, promedios *buffer) {
+void bar_get_promedios(modelo *m, int N, int n, promedios *buffer, double p, double eps, int burnin) {
     /*
         Barremos las tempreaturas T en [0, 3.3] con n puntos calculados según
         la función bar_get_T y para cada temperatura calculamos varios promedios
@@ -40,16 +40,16 @@ void bar_get_promedios(modelo *m, int N, int n, promedios *buffer) {
     for (int i = 0; i < n; ++i) {
 
         // Calculamos la temperatura correspondiente en el barrido
-        T = bar_get_T((double) i / n, 0.3, 0.01);
+        T = bar_get_T((double) i / n, p, eps);
 
         // Setteamos esta temperatura en el modelo
         modelo_reset_T(m, T);
 
         // Reseteamos el modelo
-        modelo_reset_ran(m);
+        modelo_reset_up(m);
 
         // Calculamos los promedios
-        buffer[i] = sim_get_promedios(m, N);
+        buffer[i] = sim_get_promedios(m, N, burnin);
 
     }
 

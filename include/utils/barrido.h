@@ -14,6 +14,6 @@
 double bar_get_T(double x, double p, double eps);
 
 /* Función para llenar un buffer de tamaño n con datos de un barrido de temperaturas */
-void bar_get_promedios(modelo *m, int N, int n, promedios *buffer);
+void bar_get_promedios(modelo *m, int N, int n, promedios *buffer, double p, double eps, int burnin);
 
 #endif // BARRIDO_H

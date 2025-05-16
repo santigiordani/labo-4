@@ -66,7 +66,7 @@ void sim_get_E(modelo *m, int N, double *buffer) {
 }
 
 /* Calculamos varios promedios luego de N pasos MC */
-promedios sim_get_promedios(modelo *m, int N) {
+promedios sim_get_promedios(modelo *m, int N, int burnin) {
     /*
         Hacemos N pasos MC a partir del estado actual del modelo y en cada uno
         calculamos los promedios de
@@ -77,8 +77,18 @@ promedios sim_get_promedios(modelo *m, int N) {
             - susceptibilidad
             - calor específico
             - cumulante de Binder
+        
+        Antes de hacer la simulación se descartan burnin pasos MC.
     */
 
+    // Burn in
+    for (int i = 0; i < burnin; ++i) {
+
+        // Damos un paso MC
+        modelo_paso_mc(m);
+
+    }
+    
     // Variables para calcular el promedio
     double _M, _E, M_abs = 0, M2 = 0, M4 = 0, E = 0, E2 = 0;
 

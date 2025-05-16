@@ -25,7 +25,7 @@ void sim_get_M(modelo *m, int N, double *buffer);
 void sim_get_E(modelo *m, int N, double *buffer);
 
 /* Funcion para calcular promedios a lo largo de N pasos MC */
-promedios sim_get_promedios(modelo *m, int N);
+promedios sim_get_promedios(modelo *m, int N, int burnin);
  
 
 #endif // SIMULACION_H

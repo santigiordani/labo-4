@@ -20,6 +20,5 @@ set style fill transparent solid .3 noborder
 set key top left
 
 # Dibujar los histogramas superpuestos
-plot \
-    'data/c_baja.txt' using (bin($1,bin_width)):(1) smooth freq with boxes lc rgb "blue" title "T^{*} = 2.2", \
-    'data/c_alta.txt' using (bin($1,bin_width)):(1) smooth freq with boxes lc rgb "red" title "T^{*} = 2.3"
+plot 'data/c_baja.txt' using (bin($1,bin_width)):(1) smooth freq with boxes lc rgb "blue" title "T^{*} = 2",\
+     'data/c_alta.txt' using (bin($1,bin_width)):(1) smooth freq with boxes lc rgb "red" title "T^{*} = 2.5"
