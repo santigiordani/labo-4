@@ -79,12 +79,3 @@ más general posible) que son útiles para todo el ejercicio. Entre estos hay
 Como además hay aleatoriedad dando vuelta, el `Modelo` va a necesitar almacenar
 también un puntero al estado de algún generador de números aleatorios. En este
 caso vamos a usar el Mersenne Twister.
-
-# Notas personales
-
-Para inicializar el mtran hay que hacer
-```C
-// Estado
-mtran_state mt_state;
-mtran_set(&mt_state, 5489UL);
-```
